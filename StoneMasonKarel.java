@@ -9,7 +9,6 @@
  */
 
 import stanford.karel.*;
-
 public class StoneMasonKarel extends SuperKarel {
 	public void run(){
 		while (frontIsClear()) {
@@ -20,11 +19,14 @@ public class StoneMasonKarel extends SuperKarel {
 		upanddown();
 	}
 	private void moveVertical(){
+		if (noBeepersPresent()){
+			putBeeper();
+		}
 		while (frontIsClear()) {
+			move();
 			if (noBeepersPresent()){
 				putBeeper();
 			}
-			move();
 		}
 	}
 	private void moveHorizontal(){
