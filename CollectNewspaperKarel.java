@@ -21,6 +21,7 @@ public class CollectNewspaperKarel extends SuperKarel {
 		fast();
 		turnRight();
 		move();
+		turnRight();
 	}
 	private void fast() {
 		for(int i=0;i<3;i++){
