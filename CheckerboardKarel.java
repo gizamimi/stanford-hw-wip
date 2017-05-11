@@ -11,6 +11,7 @@ import stanford.karel.*;
 
 public class CheckerboardKarel extends SuperKarel {
 	public void run(){		
+		putBeeper();
 		while (frontIsClear()){
 			moveOn();
 			oddToEven();
@@ -19,7 +20,6 @@ public class CheckerboardKarel extends SuperKarel {
 		}
 	}
 	private void moveOn(){
-		putBeeper();
 		while (frontIsClear()){
 			if (frontIsClear()){
 				move();
@@ -33,15 +33,31 @@ public class CheckerboardKarel extends SuperKarel {
 	private void oddToEven(){
 		turnLeft();
 		if (frontIsClear()){
-			move();
-			turnLeft();
+			if (beepersPresent()){
+				move();
+				turnLeft();
+				move();
+				putBeeper();
+			} else{
+				move();
+				turnLeft();
+				putBeeper();
+			}
 		}
 	}
 	private void evenToOdd(){
 		turnRight();
 		if (frontIsClear()){
-			move();	
-			turnRight();
+			if (beepersPresent()){
+				move();
+				turnRight();
+				move();
+				putBeeper();
+			} else{
+				move();	
+				turnRight();
+				putBeeper();
+			}
 		}
 	}
 }
