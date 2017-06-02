@@ -28,17 +28,21 @@ public class Pyramid extends GraphicsProgram {
 	public void run() {
 		//define vertically: number of rows
 		for (int row = 0; row < BRICKS_IN_BASE; row++) { 
-			int bricksInRow = BRICKS_IN_BASE - row; 
-			/* row 0(last row) has 14 bricksInRow. 
-			 * from bottom to top: row 1 has 13 bricks, row 2 has 12 bricks...top row 13 has 14 bricks
-			 * thus bricksInRow is BRICKS_IN_BASE(14) - row.
+			/* row 0(base row) has 14 bricksInRow. 
+			 * from bottom to top: row 1 has 13 bricks, row 2 has 12 bricks...top row 13 has 1 brick
+			 * thus bricksInRow is Bricks in row 0(BRICKS_IN_BASE = 14) - row number.
 			 */
+			int bricksInRow = BRICKS_IN_BASE - row; 
 			//define horizontally: number of bricks per row
 			for (int brickNum = 0; brickNum < bricksInRow; brickNum++){
 				int x = getWidth()/2 - bricksInRow * BRICK_WIDTH / 2 + brickNum * BRICK_WIDTH;
-				//brickNum starts from 0. the first brick's x starts from 0
-				int y = getHeight() - (row+1) * BRICK_HEIGHT;
-				//row
+				//brickNum starts from 0
+				int y = getHeight() - (row + 1) * BRICK_HEIGHT;
+				/* x,y are coordinates of the upper left corner
+				 * row ＋1 because row starts from 0 and ends 13
+				 * we need total of 14 rows so add the 0 row
+				 * base row 0 upper left height: total height - 1 brick height
+				 */
 				GRect brick = new GRect(x,y,BRICK_WIDTH,BRICK_HEIGHT);
 				add(brick);
 			}
