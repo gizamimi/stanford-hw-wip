@@ -11,11 +11,11 @@ import acm.program.*;
 public class Hailstone extends ConsoleProgram {
 	public void run() {
 		int n = readInt("Enter a number: ");
-		int steps = 0;
-		if (n <= 0){
+		int steps = 0; 
+		if (n <= 0){ //n needs to be positive integer//
 			println ("Not valid input!");
-		}else {
-			while (n>0 && n != 1){
+		}else { //int n>0//
+			while (n != 1){
 				if (n % 2 == 0) {
 					println (n +" is even so I take half: "+ (n / 2));
 					n = n/2;
