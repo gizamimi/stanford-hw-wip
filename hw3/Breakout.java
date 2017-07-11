@@ -33,7 +33,7 @@ public class Breakout extends GraphicsProgram {
 	private static final int PADDLE_Y_OFFSET = 30;
 
 /** Number of bricks per row */
-	private static final int NBRICKS_PER_ROW = 2;
+	private static final int NBRICKS_PER_ROW = 1;
 
 /** Number of rows of bricks */
 	private static final int NBRICK_ROWS = 3;
@@ -107,9 +107,7 @@ public class Breakout extends GraphicsProgram {
 	private void play(){
 		createBall();
 		getVelocity(); //don't set it up inside while! or vy vx will always return to the initial
-		while (!gameEnd){
-			moveBall();
-		}
+		moveBall();
 	}
 	
 	private void createBall(){
@@ -125,11 +123,14 @@ public class Breakout extends GraphicsProgram {
 	}
 	
 	private void moveBall(){
-		ball.move(vx, vy);
-		bounceOffWall();
-		checkForCollisions();
-		checkEndStatus();
-		pause(15);
+		while (!gameEnd){
+			ball.move(vx, vy);
+			bounceOffWall();
+			checkForCollisions();
+			checkEndStatus();
+			pause(15);
+		}
+		
 	}
 	
 	private void bounceOffWall(){
@@ -166,39 +167,39 @@ public class Breakout extends GraphicsProgram {
 	}
 	
 	private void checkEndStatus(){
-		if (ball.getY() + vy> paddle.getY()){ //lose: when the ball fall below the paddle
-			count--;
-			remove(ball);
-			GLabel lose = new GLabel ("YOU LOSE... " + count + " LEFT");
-			lose.setLocation((WIDTH - lose.getWidth()) / 2, HEIGHT / 2);
-			lose.setFont("Helvetica-25");
-			add(lose);
-			if (count == 0) {
-				gameEnd = true;
-				removeAll();
-				GLabel gameOver = new GLabel ("NO COUNT LEFT, GAMEOVER");
-				gameOver.setLocation((WIDTH - gameOver.getWidth()) / 2, HEIGHT / 2);
-				gameOver.setFont("Helvetica-25");
-				add(gameOver);
-			} else {
-			restart(); 
-			}
+		//YOU LOSE, USED ALL THREE CHANCES//
+		if (count == 0) {
+			gameEnd = true;
+			removeAll();
+			GLabel gameOver = new GLabel ("NO COUNT LEFT, GAMEOVER");
+			gameOver.setFont("Helvetica-25");
+			gameOver.setLocation((WIDTH - gameOver.getWidth()) / 2, HEIGHT / 2);
+			add(gameOver);
 		}
+		//YOU WIN/
 		if (brickNum == 0){
 			gameEnd = true;
 			remove(ball);
 			GLabel win = new GLabel ("YOU WIN!");
-			win.setLocation((WIDTH - win.getWidth()) / 2, HEIGHT / 2);
 			win.setFont("Helvetica-25");
+			win.setLocation((WIDTH - win.getWidth()) / 2, HEIGHT / 2);
 			add(win);
 		}
-	}
-	
-	private void restart(){
-		waitForClick();
-		createBall();
-		vy = -vy; //makes the new ball drop downwards instead of upwards
-		moveBall();	
+		//YOU LOSE ONE TIME: the ball fall below the paddle//
+		if (ball.getY() + vy> paddle.getY()){
+			count--;
+			remove(ball);
+			GLabel lose = new GLabel ("YOU LOSE... " + count + " LEFT");
+			lose.setFont("Helvetica-25");
+			lose.setLocation((WIDTH - lose.getWidth()) / 2, HEIGHT / 2);
+			add(lose);
+			//restart//
+			waitForClick();
+			createBall();
+			brickNum++; //why??????? must add this or the game will win before all bricks gone
+			vy = -vy; //makes the new ball drop downwards instead of upwards
+			//since it is in the while loop, no need to add moveBall() again to restart
+		}
 	}
 	
 	private int brickNum = NBRICKS_PER_ROW * NBRICK_ROWS;
