@@ -33,10 +33,10 @@ public class Breakout extends GraphicsProgram {
 	private static final int PADDLE_Y_OFFSET = 30;
 
 /** Number of bricks per row */
-	private static final int NBRICKS_PER_ROW = 1;
+	private static final int NBRICKS_PER_ROW = 10;
 
 /** Number of rows of bricks */
-	private static final int NBRICK_ROWS = 3;
+	private static final int NBRICK_ROWS = 10;
 
 /** Separation between bricks */
 	private static final int BRICK_SEP = 4;
@@ -130,7 +130,6 @@ public class Breakout extends GraphicsProgram {
 			checkEndStatus();
 			pause(15);
 		}
-		
 	}
 	
 	private void bounceOffWall(){
@@ -145,7 +144,11 @@ public class Breakout extends GraphicsProgram {
 		GObject collider = getCollidingObject(ball.getX(), ball.getY());
 		if (collider == paddle){
 			vy = -vy;
-		}else if (collider !=null){ //collider == brick
+		}else if (collider !=null){ 
+		/** collider == brick, 
+		 * be aware this condition is not perfect and can collide with other gobject such as labels.
+		 * be sure to delete any gobject in the moveBall while loop 
+		 */
 			remove (collider);
 			vy = -vy;
 			brickNum --;
@@ -167,16 +170,16 @@ public class Breakout extends GraphicsProgram {
 	}
 	
 	private void checkEndStatus(){
-		//YOU LOSE, USED ALL THREE CHANCES//
+		/**result 1: YOU LOSE, USED ALL THREE CHANCES*/
 		if (count == 0) {
 			gameEnd = true;
 			removeAll();
 			GLabel gameOver = new GLabel ("NO COUNT LEFT, GAMEOVER");
-			gameOver.setFont("Helvetica-25");
+			gameOver.setFont("Helvetica-25"); //should add in front of setLocation
 			gameOver.setLocation((WIDTH - gameOver.getWidth()) / 2, HEIGHT / 2);
 			add(gameOver);
 		}
-		//YOU WIN/
+		/**result 2: YOU WIN*/
 		if (brickNum == 0){
 			gameEnd = true;
 			remove(ball);
@@ -185,7 +188,9 @@ public class Breakout extends GraphicsProgram {
 			win.setLocation((WIDTH - win.getWidth()) / 2, HEIGHT / 2);
 			add(win);
 		}
-		//YOU LOSE ONE TIME: the ball fall below the paddle//
+		/**result 3: YOU LOSE ONE TIME: the ball fall below the paddle
+		 * when restart, the game will begin with the same # of bricks left in last round
+		 */
 		if (ball.getY() + vy> paddle.getY()){
 			count--;
 			remove(ball);
@@ -193,11 +198,10 @@ public class Breakout extends GraphicsProgram {
 			lose.setFont("Helvetica-25");
 			lose.setLocation((WIDTH - lose.getWidth()) / 2, HEIGHT / 2);
 			add(lose);
-			//restart//
+			/**restart*/
 			waitForClick();
-			createBall();
-			brickNum++; //why??????? must add this or the game will win before all bricks gone
-			vy = -vy; //makes the new ball drop downwards instead of upwards
+			remove(lose); /** must add, or the label(lose) will collide with ball and cause brickNum-- in checkForCollisions()*/
+			createBall(); 
 			//since it is in the while loop, no need to add moveBall() again to restart
 		}
 	}
