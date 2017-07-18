@@ -1,5 +1,5 @@
 /*
- * File: addingCommas.java
+ * File: AddingCommas.java
  * ------------------
  * This program will eventually add commas to numeric strings from
  * Section Handout #4: String Processing.
@@ -7,7 +7,7 @@
 
 import acm.program.*;
 
-public class addingCommas extends ConsoleProgram {
+public class AddingCommas extends ConsoleProgram {
 
 	public void run() {
         while (true) {
