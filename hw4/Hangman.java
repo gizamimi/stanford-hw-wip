@@ -34,20 +34,27 @@ public class Hangman extends ConsoleProgram {
 		for (int i = 0; i < word.length(); i++){
 			hidden =  hidden + "-";
 		}
-		println ("The word now looks like this: " + hidden);
-		
-		/**step 3: setting beginning life = 8 
-		 * + can converts any operands that are not strings to their string representation
-		 * so can use println to add integer
-		 */
-		println("You have "+ lives +" guesses left.");
 	}
 	
 	private void play(){
 		while (!gameEnd){
-			userTypeIn(); //user type in ch
+			println ("The word now looks like this: " + hidden);
+			checkLife();
+			userTypeIn(); //user type in character ch
 			checkLetter(); //check if user has guessed correctly//
 			checkEndStatus(); 
+		}
+	}
+	
+	private void checkLife(){
+		/**Beginning life = 8 
+		 * + can converts any operands that are not strings to their string representation
+		 * so can use println to add integer
+		 */
+		if (lives > 1) {
+			println("You have "+ lives +" guesses left.");
+		} else if (lives ==1){
+			println("You have only 1 guess left.");
 		}
 	}
 	
@@ -79,38 +86,26 @@ public class Hangman extends ConsoleProgram {
 			}
 		}
 	}
-	
 	private void checkEndStatus(){
+		/**RESULT 1: YOU LOSE*/
 		if (lives == 0){
-			/**RESULT 1: YOU LOSE*/
 			gameEnd = true;
 			println("You're completely hung.");
 			println("The word was: " + word);
 			println("You lose.");
-		} else if (hidden.equals(word)){
-			/**RESULT 2:YOU WIN*/
+		} 
+		/**RESULT 2:YOU WIN*/
+		if (hidden.equals(word)){
 			gameEnd = true;
-			println("You guessed the word " + word);
+			println("You guessed the word: " + word);
 			println("You win.");
-		} else {
-			/**RESULT 3: TBC*/
-			println ("The word now looks like this: " + hidden);
-			checkLife();
-		}
-	}
-	private void checkLife(){
-		if (lives > 1) {
-			println("You have "+ lives +" guesses left.");
-		} else if (lives ==1){
-			println("You have only 1 guess left.");
-		}
+		} 
 	}
 	
 	/**create a new HangmanLexicon and store it in an instance variable*/
 	private HangmanLexicon lexicon = new HangmanLexicon();
-	private int lives = 8;
-	/**character user typed in*/
-	private char ch;
+	private int lives = 8; //Beginning life = 8 
+	private char ch; //character user typed in
 	private String word;
 	private String hidden;
 	private boolean gameEnd = false;
