@@ -45,35 +45,29 @@ public class Hangman extends ConsoleProgram {
 	
 	private void play(){
 		while (!gameEnd){
-			userTypeIn();  //user type in ch
-			checkLetter(); //check if the 
-			checkEndStatus(); //
-			println ("The word now looks like this: " + hidden);
-			if (lives > 1) {
-				println("You have "+ lives +" guesses left.");
-			} else if (lives ==1){
-				println("You have only 1 guess left.");
-			}
+			userTypeIn(); //user type in ch
+			checkLetter(); //check if user has guessed correctly//
+			checkEndStatus(); 
 		}
 	}
+	
 	private void userTypeIn(){
 		String Line = readLine("Your guess: ");
-		while (true){
-			if (Line.length()!= 1){
-				Line = readLine("Invalid! Please type in one character: ");
-			}
-			if (!Character.isLetter(ch)) {
-				Line = readLine("Invalid! Please type in only letter format.");
-			}else if(Line.length() = 1){
-				
+		ch = Line.charAt(0);
+		while(true){ //check if the line user typed is in correct format
+			if ((Line.length() != 1) || (!Character.isLetter(ch))){ //incorrect format: 空格。数字。（bug：回车报错！！！）
+				Line = readLine("Invalid! Please type in again: ");
+				ch = Line.charAt(0);
+			} else{
+				break;
 			}
 		}
-		ch = Line.charAt(0);
 		if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
 		//also can written as if(Character.isLowerCase(ch))
 	}
+	
 	private void checkLetter(){
-		if(word.indexOf(ch) == -1) {
+		if(word.indexOf(ch) == -1) { //this character does not exist in word
 			println("There are no "+ ch +"'s in the word");
 			lives --;
 		} else { //ch exists in word
@@ -85,19 +79,30 @@ public class Hangman extends ConsoleProgram {
 			}
 		}
 	}
+	
 	private void checkEndStatus(){
-		/**RESULT 1: YOU LOSE*/
 		if (lives == 0){
+			/**RESULT 1: YOU LOSE*/
 			gameEnd = true;
 			println("You're completely hung.");
 			println("The word was: " + word);
 			println("You lose.");
-		} 
-		/**RESULT 2:YOU WIN*/
-		if (hidden.equals(word)){
+		} else if (hidden.equals(word)){
+			/**RESULT 2:YOU WIN*/
 			gameEnd = true;
 			println("You guessed the word " + word);
 			println("You win.");
+		} else {
+			/**RESULT 3: TBC*/
+			println ("The word now looks like this: " + hidden);
+			checkLife();
+		}
+	}
+	private void checkLife(){
+		if (lives > 1) {
+			println("You have "+ lives +" guesses left.");
+		} else if (lives ==1){
+			println("You have only 1 guess left.");
 		}
 	}
 	
