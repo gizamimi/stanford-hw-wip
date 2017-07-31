@@ -88,7 +88,7 @@ public class Hangman extends ConsoleProgram {
 					 */
 					if (hidden.indexOf(ch) != -1) { 
 						println("You already guessed that letter.");
-			        } else {
+			        	} else {
 						break; //user made a valid guess and jump out of the loop
 					}
 				}else{//incorrect format: 空格。数字。（bug：回车报错！！！）
