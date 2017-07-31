@@ -70,20 +70,30 @@ public class Hangman extends ConsoleProgram {
 	private void userTypeIn(){
 		while(true){ //check if the guess is typed in correct format
 			guess = readLine("Your guess: ");
-			ch = guess.charAt(0);
-			if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
-			//also can written as if(Character.isLowerCase(ch))
-			if (guess.length() == 1 && Character.isLetter(ch)){ 
-				/**hidden.indexOf(ch) != -1 means user has already guessed this correct character
-				 * however, guessing the same incorrect character twice will count as another wrong guess 
-				 */
-				if (hidden.indexOf(ch) != -1) { 
-					println("You already guessed that letter.");
-		        	} else {
-					break; //user made a valid guess and jump out of the loop
+			
+			/**add guess==null and guess.equals("") to avoid player press enter instantly
+			 * 如果不加这个if, guess.charAt(0)会报错因为guess是个空集，什么都没有
+			 * ch在0位置，默认guess至少有1个以上字符
+			 */
+			if(guess==null||guess.equals("")){
+				println("Invalid! You must type something anyway.");
+			} else {
+				ch = guess.charAt(0);
+				if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
+				//also can written as if(Character.isLowerCase(ch))
+				if (guess.length() == 1 && Character.isLetter(ch)){ 
+					
+					/**hidden.indexOf(ch) != -1 means user has already guessed this correct character
+					 * however, guessing the same incorrect character twice will count as another wrong guess 
+					 */
+					if (hidden.indexOf(ch) != -1) { 
+						println("You already guessed that letter.");
+			        } else {
+						break; //user made a valid guess and jump out of the loop
+					}
+				}else{//incorrect format: 空格。数字。（bug：回车报错！！！）
+					println("Invalid! Type a single letter from A-Z. ");
 				}
-			}else{//incorrect format: 空格。数字。（bug：回车报错！！！）
-				println("Invalid! Type a single letter from A-Z. ");
 			}
 		}
 	}
