@@ -12,12 +12,21 @@ import acm.util.*;
 import java.awt.*;
 
 public class Hangman extends ConsoleProgram {
+	public void init() {
+		/**init method initializes the canvas 
+		  * and adds it to the window 
+		  * prior to the run method being executed;*/
+        canvas = new HangmanCanvas();
+        add(canvas);
+	 }
+	 
 	public void run(){
 		setUp();
 		play();
 	}
 	
 	private void setUp(){
+		canvas.reset();
 		println("Welcome to Hangman!");
 		
 		/**step1: randomly choose a word from lexicon
@@ -27,8 +36,8 @@ public class Hangman extends ConsoleProgram {
 		 */
 		word = lexicon.getWord(rgen.nextInt(0,(lexicon.getWordCount() - 1)));
 		
-		/**step 2: setting hidden dashes
-		* the game starts with # of dashes equals word.length()
+		/**step 2: setting hidden hyphens
+		* the game starts with # of hyphens equals word.length()
 		*/
 		hidden = "";
 		for (int i = 0; i < word.length(); i++){
@@ -39,10 +48,10 @@ public class Hangman extends ConsoleProgram {
 	private void play(){
 		while (!gameEnd){
 			println ("The word now looks like this: " + hidden);
-			checkLife();
-			userTypeIn(); //user type in character ch
-			checkLetter(); //check if user has guessed correctly//
-			checkEndStatus(); 
+			checkLife(); 
+			userTypeIn(); //user type in character ch, check if the guess format is valid
+			checkLetter(); //check if the valid guess is correct
+			checkEndStatus(); //win or lose
 		}
 	}
 	
@@ -59,18 +68,24 @@ public class Hangman extends ConsoleProgram {
 	}
 	
 	private void userTypeIn(){
-		String Line = readLine("Your guess: ");
-		ch = Line.charAt(0);
-		while(true){ //check if the line user typed is in correct format
-			if ((Line.length() != 1) || (!Character.isLetter(ch))){ //incorrect format: 空格。数字。（bug：回车报错！！！）
-				Line = readLine("Invalid! Please type in again: ");
-				ch = Line.charAt(0);
-			} else{
-				break;
+		while(true){ //check if the guess is typed in correct format
+			guess = readLine("Your guess: ");
+			ch = guess.charAt(0);
+			if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
+			//also can written as if(Character.isLowerCase(ch))
+			if (guess.length() == 1 && Character.isLetter(ch)){ 
+				/**hidden.indexOf(ch) != -1 means user has already guessed this correct character
+				 * however, guessing the same incorrect character twice will count as another wrong guess 
+				 */
+				if (hidden.indexOf(ch) != -1) { 
+					println("You already guessed that letter.");
+		        } else {
+					break; //user made a valid guess and jump out of the loop
+				}
+			}else{//incorrect format: 空格。数字。（bug：回车报错！！！）
+				println("Invalid! Type a single letter from A-Z. ");
 			}
 		}
-		if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
-		//also can written as if(Character.isLowerCase(ch))
 	}
 	
 	private void checkLetter(){
@@ -80,12 +95,13 @@ public class Hangman extends ConsoleProgram {
 		} else { //ch exists in word
 			println("That guess is correct.");
 		}
-		for (int i = 0; i < word.length(); i++){ //show the correct character instead of dash in hidden word
+		for (int i = 0; i < word.length(); i++){ //make the correct guessed character visible instead of hyphens
 			if (ch==word.charAt(i)){
 				hidden = hidden.substring(0, i) + ch + hidden.substring(i+1);
 			}
 		}
 	}
+	
 	private void checkEndStatus(){
 		/**RESULT 1: YOU LOSE*/
 		if (lives == 0){
@@ -104,8 +120,10 @@ public class Hangman extends ConsoleProgram {
 	
 	/**create a new HangmanLexicon and store it in an instance variable*/
 	private HangmanLexicon lexicon = new HangmanLexicon();
+	private HangmanCanvas canvas;
 	private int lives = 8; //Beginning life = 8 
 	private char ch; //character user typed in
+	private String guess;
 	private String word;
 	private String hidden;
 	private boolean gameEnd = false;
