@@ -43,13 +43,14 @@ public class Hangman extends ConsoleProgram {
 		for (int i = 0; i < word.length(); i++){
 			hidden =  hidden + "-";
 		}
+		canvas.displayWord(hidden); //初始setup时候就应当在canvas画上所有hyphens
 	}
 	
 	private void play(){
 		while (!gameEnd){
 			println ("The word now looks like this: " + hidden);
 			checkLife(); 
-			userTypeIn(); //user type in character ch, check if the guess format is valid
+			userTypeIn(); //user type in string guess, check if the guess format is valid
 			checkLetter(); //check if the valid guess is correct
 			checkEndStatus(); //win or lose
 		}
@@ -68,7 +69,8 @@ public class Hangman extends ConsoleProgram {
 	}
 	
 	private void userTypeIn(){
-		while(true){ //check if the guess is typed in correct format
+		while(true){
+			/**目标是一个单字符的A-Z字母*/
 			guess = readLine("Your guess: ");
 			
 			/**add guess==null and guess.equals("") to avoid player press enter instantly
@@ -81,8 +83,8 @@ public class Hangman extends ConsoleProgram {
 				ch = guess.charAt(0);
 				if(ch >= 'a' && ch <= 'z') ch = Character.toUpperCase(ch);
 				//also can written as if(Character.isLowerCase(ch))
+				
 				if (guess.length() == 1 && Character.isLetter(ch)){ 
-					
 					/**hidden.indexOf(ch) != -1 means user has already guessed this correct character
 					 * however, guessing the same incorrect character twice will count as another wrong guess 
 					 */
@@ -100,15 +102,18 @@ public class Hangman extends ConsoleProgram {
 	
 	private void checkLetter(){
 		if(word.indexOf(ch) == -1) { //this character does not exist in word
+			canvas.noteIncorrectGuess(ch);
 			println("There are no "+ ch +"'s in the word");
 			lives --;
 		} else { //ch exists in word
 			println("That guess is correct.");
 		}
-		for (int i = 0; i < word.length(); i++){ //make the correct guessed character visible instead of hyphens
+		/** display the correct guessed character instead of hyphens */
+		for (int i = 0; i < word.length(); i++){ 
 			if (ch==word.charAt(i)){
 				hidden = hidden.substring(0, i) + ch + hidden.substring(i+1);
 			}
+			canvas.displayWord(hidden);
 		}
 	}
 	
