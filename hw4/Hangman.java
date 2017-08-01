@@ -50,8 +50,8 @@ public class Hangman extends ConsoleProgram {
 		while (!gameEnd){
 			println ("The word now looks like this: " + hidden);
 			checkLife(); 
-			userTypeIn(); //user type in string guess, check if the guess format is valid
-			checkLetter(); //check if the valid guess is correct
+			userTypeIn();//检查用户输入的格式是否正确
+			checkLetter(); //检查格式正确的ch是否存在于答案word里
 			checkEndStatus(); //win or lose
 		}
 	}
@@ -101,11 +101,11 @@ public class Hangman extends ConsoleProgram {
 	}
 	
 	private void checkLetter(){
-		if(word.indexOf(ch) == -1) { //this character does not exist in word
-			canvas.noteIncorrectGuess(ch);
+		if(word.indexOf(ch) == -1) { //ch不存在于答案word中
+			canvas.noteIncorrectGuess(ch); //每次错误，在canvas最下方更新输入的错误字母
 			println("There are no "+ ch +"'s in the word");
 			lives --;
-		} else { //ch exists in word
+		} else { //ch存在于word里
 			println("That guess is correct.");
 		}
 		/** display the correct guessed character instead of hyphens */
@@ -113,14 +113,14 @@ public class Hangman extends ConsoleProgram {
 			if (ch==word.charAt(i)){
 				hidden = hidden.substring(0, i) + ch + hidden.substring(i+1);
 			}
-			canvas.displayWord(hidden);
+			canvas.displayWord(hidden); //每次正确，把canvas上的hyphens替换掉
 		}
 	}
 	
 	private void checkEndStatus(){
 		/**RESULT 1: YOU LOSE*/
 		if (lives == 0){
-			gameEnd = true;
+			gameEnd = true; //boolean的脱出必须要进行完当次while循环。break可以直接停止
 			println("You're completely hung.");
 			println("The word was: " + word);
 			println("You lose.");
