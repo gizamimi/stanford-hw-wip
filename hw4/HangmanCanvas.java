@@ -69,7 +69,9 @@ public class HangmanCanvas extends GCanvas {
 		}
 		add(IncorrectGuess);
 		
-		/**incorrectGuess.length() is the # of incorrect guess user has made*/
+		/**incorrectGuess.length() is the # of incorrect guess user has made
+		 * use this method when the length >= 1 so starts from case 1.
+		 */
 		switch(incorrectGuess.length()){
 			case 1: drawHead(); break;
 			case 2: drawBody(); break;
@@ -156,5 +158,4 @@ public class HangmanCanvas extends GCanvas {
 	private static final int HIP_WIDTH = 36;
 	private static final int LEG_LENGTH = 108;
 	private static final int FOOT_LENGTH = 28;
-
 }
